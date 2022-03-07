@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/exchange_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="거래소"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/setting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/setting_image"
+                    android:backgroundTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/message"
+                    app:layout_constraintStart_toEndOf="@id/exchange_text"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/message_image"
+                    android:backgroundTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/setting"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <ImageView
+            android:id="@+id/search_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/search_image"
+            android:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/simple_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <EditText
+            android:id="@+id/search_coin_or_symbol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="코인명/심볼 검색"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/search_image"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <View
+            android:id="@+id/simple_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/search_coin_or_symbol" />
+
+        <Button
+            android:id="@+id/KRW"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="KRW"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/BTC"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/simple_line" />
+
+        <Button
+            android:id="@+id/BTC"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="BTC"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/USDT"
+            app:layout_constraintStart_toEndOf="@id/KRW"
+            app:layout_constraintTop_toBottomOf="@id/simple_line" />
+
+        <Button
+            android:id="@+id/USDT"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="USDT"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/attention"
+            app:layout_constraintStart_toEndOf="@id/BTC"
+            app:layout_constraintTop_toBottomOf="@id/simple_line" />
+
+        <Button
+            android:id="@+id/attention"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="관심"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/USDT"
+            app:layout_constraintTop_toBottomOf="@id/simple_line" />
+
+        <TextView
+            android:id="@+id/korean_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="한글명"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/current_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/KRW" />
+
+        <TextView
+            android:id="@+id/current_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="현재가"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/day_to_day"
+            app:layout_constraintStart_toEndOf="@id/korean_sort"
+            app:layout_constraintTop_toBottomOf="@id/BTC" />
+
+        <TextView
+            android:id="@+id/day_to_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="전일대비"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/transaction_amount"
+            app:layout_constraintStart_toEndOf="@id/current_price"
+            app:layout_constraintTop_toBottomOf="@id/USDT" />
+
+        <TextView
+            android:id="@+id/transaction_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingEnd="16dp"
+            android:text="거래대금"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/day_to_day"
+            app:layout_constraintTop_toBottomOf="@id/attention" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/current_price"
+            tools:listitem="@layout/recyclerview_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

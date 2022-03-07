@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="market"
+            type="com.example.upbitsampleapp.entities.CoinData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/coin_name_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="6dp"
+            android:text="@{market.korName}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/coin_name_bottom"
+            app:layout_constraintEnd_toStartOf="@id/current_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="쓰레스홀드" />
+
+        <TextView
+            android:id="@+id/coin_name_bottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{market.engName}"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/coin_name_top"
+            app:layout_constraintStart_toStartOf="@id/coin_name_top"
+            app:layout_constraintTop_toBottomOf="@id/coin_name_top"
+            tools:text="T/KRW" />
+
+        <TextView
+            android:id="@+id/current_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@{Double.toString(market.currentPrice)}"
+            app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
+            app:layout_constraintEnd_toStartOf="@id/day_to_day"
+            app:layout_constraintStart_toEndOf="@id/coin_name_top"
+            app:layout_constraintTop_toTopOf="@id/coin_name_top"
+            tools:text="230" />
+
+        <TextView
+            android:id="@+id/day_to_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@{Double.toString(market.perYesterday)}"
+            app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
+            app:layout_constraintEnd_toStartOf="@id/transaction_amount"
+            app:layout_constraintStart_toEndOf="@id/current_price"
+            app:layout_constraintTop_toTopOf="@id/coin_name_top"
+            tools:text="9.00%" />
+
+        <TextView
+            android:id="@+id/transaction_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@{Double.toString(market.tradePrice)}"
+            app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/day_to_day"
+            app:layout_constraintTop_toTopOf="@id/coin_name_top"
+            tools:text="537,278백만" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

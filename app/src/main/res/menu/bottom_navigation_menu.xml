@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/exchange"
+        android:enabled="true"
+        android:icon="@drawable/exchange"
+        android:title="거래소" />
+    <item
+        android:id="@+id/coin_detail"
+        android:enabled="true"
+        android:icon="@drawable/coin_detail"
+        android:title="코인정보" />
+
+    <item
+        android:id="@+id/investment_history"
+        android:enabled="true"
+        android:icon="@drawable/investment_history"
+        android:title="투자내역" />
+
+    <item
+        android:id="@+id/deposit_and_withdraw"
+        android:enabled="true"
+        android:icon="@drawable/deposit_and_withdraw"
+        android:title="입출금내역" />
+
+    <item
+        android:id="@+id/my_information"
+        android:enabled="true"
+        android:icon="@drawable/my_information"
+        android:title="내정보" />
+</menu>
