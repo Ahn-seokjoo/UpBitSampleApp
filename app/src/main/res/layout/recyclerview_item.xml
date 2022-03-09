@@ -41,10 +41,10 @@
 
         <TextView
             android:id="@+id/current_price"
+            bindCurrentPrice="@{market.currentPrice}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            bindCurrentPrice="@{market.currentPrice}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
             app:layout_constraintEnd_toStartOf="@id/perYesterday"
             app:layout_constraintStart_toEndOf="@id/coin_name_top"
@@ -53,10 +53,10 @@
 
         <TextView
             android:id="@+id/perYesterday"
+            bindPerYesterday="@{market.perYesterday}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            bindPerYesterday="@{market.perYesterday}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
             app:layout_constraintEnd_toStartOf="@id/transaction_amount"
             app:layout_constraintStart_toEndOf="@id/current_price"
@@ -65,10 +65,10 @@
 
         <TextView
             android:id="@+id/transaction_amount"
+            bindTradePrice="@{market.tradePrice}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            bindTradePrice="@{market.tradePrice}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/perYesterday"

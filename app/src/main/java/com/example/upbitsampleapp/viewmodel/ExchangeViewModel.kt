@@ -1,14 +1,14 @@
 package com.example.upbitsampleapp.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.entities.dto.Market
 import com.example.upbitsampleapp.entities.nameMapper
 import com.example.upbitsampleapp.entities.toCoinData
 import com.example.upbitsampleapp.repository.ExchangeRepository
+import com.example.upbitsampleapp.util.NonNullLiveData
+import com.example.upbitsampleapp.util.NonNullMutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -21,8 +21,8 @@ class ExchangeViewModel @Inject constructor(
     private val allMarketTickerDataList = mutableListOf<CoinData>()
     private val allMarketList = mutableListOf<Market.MarketItem>()
 
-    private val _marketResult = MutableLiveData<MutableList<CoinData>>()
-    val marketResult: LiveData<MutableList<CoinData>> = _marketResult
+    private val _marketResult = NonNullMutableLiveData(mutableListOf<CoinData>())
+    val marketResult: NonNullLiveData<MutableList<CoinData>> = _marketResult
 
     fun getCoinData(category: String) {
         exchangeRepository.getMarketList()

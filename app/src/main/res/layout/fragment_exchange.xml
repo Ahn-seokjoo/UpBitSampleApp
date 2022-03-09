@@ -71,7 +71,7 @@
             android:layout_marginTop="6dp"
             android:background="@drawable/search_image"
             android:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/simple_line"
+            app:layout_constraintBottom_toTopOf="@id/simple_line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -79,10 +79,12 @@
             android:id="@+id/search_coin_or_symbol"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:hint="코인명/심볼 검색"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/simple_line"
             app:layout_constraintStart_toEndOf="@id/search_image"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -90,6 +92,7 @@
             android:id="@+id/simple_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="6dp"
             android:backgroundTint="@color/white"
             app:layout_constraintTop_toBottomOf="@id/search_coin_or_symbol" />
 
@@ -137,9 +140,9 @@
             android:id="@+id/korean_sort"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="한글명"
             android:textSize="12sp"
-            android:gravity="center"
             app:layout_constraintEnd_toStartOf="@id/current_price"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/KRW" />
