@@ -56,13 +56,13 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
                     exchangeViewModel.marketResult.value //non nullable livedata 사용해보자
                         .filter {
                             it.korName.contains(text)
-                        }.toMutableList()
+                        }
                 } else {
                     exchangeViewModel.marketResult.value
                 }
             }
             .subscribe {
-                exchangeRecyclerViewAdapter.submitList(it.toList())
+                exchangeRecyclerViewAdapter.submitList(it)
             }
     }
 
