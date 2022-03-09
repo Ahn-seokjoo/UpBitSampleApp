@@ -1,4 +1,4 @@
-package com.example.upbitsampleapp.repository
+package com.example.upbitsampleapp.entities.dto
 
 
 import com.google.gson.annotations.SerializedName

@@ -1,7 +1,7 @@
 package com.example.upbitsampleapp.entities
 
-import com.example.upbitsampleapp.repository.Market
-import com.example.upbitsampleapp.repository.MarketTicker
+import com.example.upbitsampleapp.entities.dto.Market
+import com.example.upbitsampleapp.entities.dto.MarketTicker
 
 fun Market.nameMapper(category: String): String = with(StringBuilder()) {
     this@nameMapper.forEach {
@@ -35,9 +35,9 @@ fun MarketTicker.MarketTickerItem.toCoinData(allMarketList: MutableList<Market.M
     engName = getEnglishMarket(allMarketList.find {
         it.market == this.market
     }!!.market),
-    currentPrice = tradePrice.toInt(),
-    perYesterday = (prevClosingPrice / tradePrice),
-    tradePrice = accTradeVolume24h
+    currentPrice = tradePrice.toBigDecimal(),
+    perYesterday = (tradePrice / prevClosingPrice),
+    tradePrice = accTradePrice24h.toBigDecimal()
 )
 
 fun getEnglishMarket(market: String): String {

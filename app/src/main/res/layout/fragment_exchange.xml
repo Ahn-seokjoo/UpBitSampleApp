@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.example.upbitsampleapp.viewmodel.ExchangeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -132,30 +135,31 @@
 
         <TextView
             android:id="@+id/korean_sort"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="한글명"
             android:textSize="12sp"
+            android:gravity="center"
             app:layout_constraintEnd_toStartOf="@id/current_price"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/KRW" />
 
         <TextView
             android:id="@+id/current_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="end"
             android:text="현재가"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@id/day_to_day"
+            app:layout_constraintEnd_toStartOf="@id/perYesterday"
             app:layout_constraintStart_toEndOf="@id/korean_sort"
             app:layout_constraintTop_toBottomOf="@id/BTC" />
 
         <TextView
-            android:id="@+id/day_to_day"
-            android:layout_width="wrap_content"
+            android:id="@+id/perYesterday"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="end"
             android:text="전일대비"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/transaction_amount"
@@ -164,18 +168,19 @@
 
         <TextView
             android:id="@+id/transaction_amount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:paddingEnd="16dp"
             android:text="거래대금"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/day_to_day"
+            app:layout_constraintStart_toEndOf="@id/perYesterday"
             app:layout_constraintTop_toBottomOf="@id/attention" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
+            bindData="@{vm.marketResult}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.upbitsampleapp.entities.CoinData
+import com.example.upbitsampleapp.entities.dto.Market
 import com.example.upbitsampleapp.entities.nameMapper
 import com.example.upbitsampleapp.entities.toCoinData
 import com.example.upbitsampleapp.repository.ExchangeRepository
-import com.example.upbitsampleapp.repository.Market
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers

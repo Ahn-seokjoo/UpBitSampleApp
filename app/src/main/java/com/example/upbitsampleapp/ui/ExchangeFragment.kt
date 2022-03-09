@@ -19,17 +19,15 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = DataBindingUtil.bind(view) ?: throw IllegalStateException("fail to bind")
-        val recyclerViewAdapter = ExchangeRecyclerViewAdapter()
-        binding.recyclerview.adapter = recyclerViewAdapter
+
+        binding.vm = exchangeViewModel
+        binding.recyclerview.adapter = ExchangeRecyclerViewAdapter()
 
         if (savedInstanceState == null) {
             exchangeViewModel.getCoinData("KRW")
         }
-        exchangeViewModel.marketResult.observe(viewLifecycleOwner) {
-            recyclerViewAdapter.submitList(it.toList())
-        }
-        initClickListener()
 
+        initClickListener()
     }
 
     private fun initClickListener() {

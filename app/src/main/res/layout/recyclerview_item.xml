@@ -44,19 +44,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="@{Double.toString(market.currentPrice)}"
+            bindCurrentPrice="@{market.currentPrice}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
-            app:layout_constraintEnd_toStartOf="@id/day_to_day"
+            app:layout_constraintEnd_toStartOf="@id/perYesterday"
             app:layout_constraintStart_toEndOf="@id/coin_name_top"
             app:layout_constraintTop_toTopOf="@id/coin_name_top"
             tools:text="230" />
 
         <TextView
-            android:id="@+id/day_to_day"
+            android:id="@+id/perYesterday"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="@{Double.toString(market.perYesterday)}"
+            bindPerYesterday="@{market.perYesterday}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
             app:layout_constraintEnd_toStartOf="@id/transaction_amount"
             app:layout_constraintStart_toEndOf="@id/current_price"
@@ -68,10 +68,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="@{Double.toString(market.tradePrice)}"
+            bindTradePrice="@{market.tradePrice}"
             app:layout_constraintBottom_toBottomOf="@id/coin_name_top"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/day_to_day"
+            app:layout_constraintStart_toEndOf="@id/perYesterday"
             app:layout_constraintTop_toTopOf="@id/coin_name_top"
             tools:text="537,278백만" />
     </androidx.constraintlayout.widget.ConstraintLayout>
