@@ -3,9 +3,9 @@ package com.example.upbitsampleapp.util
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.upbitsampleapp.entities.CoinData
-import com.example.upbitsampleapp.ui.ExchangeRecyclerViewAdapter
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -31,8 +31,8 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("bindData")
     fun RecyclerView.bindData(list: LiveData<MutableList<CoinData>>?) {
-        list?.let {
-            (adapter as ExchangeRecyclerViewAdapter).submitList(it.value?.toList())
+        list?.value?.toList().let {
+            (adapter as ListAdapter<Any, RecyclerView.ViewHolder>).submitList(it)
         }
     }
 }
