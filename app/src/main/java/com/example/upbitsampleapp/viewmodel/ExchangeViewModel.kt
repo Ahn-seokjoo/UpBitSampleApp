@@ -23,13 +23,12 @@ class ExchangeViewModel @Inject constructor(
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val _marketResult = NonNullMutableLiveData(mutableListOf<CoinData>())
-    val marketResult: NonNullLiveData<MutableList<CoinData>> = _marketResult
+    private val _coinResult = NonNullMutableLiveData(mutableListOf<CoinData>())
+    val coinResult: NonNullLiveData<MutableList<CoinData>> = _coinResult
 
     fun getCoinData(category: String) {
         exchangeRepository.getMarketList()
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .flatMap { market ->
                 Observable.fromIterable(market)
             }
@@ -56,7 +55,7 @@ class ExchangeViewModel @Inject constructor(
             }
             .toList()
             .subscribe({
-                _marketResult.value = it
+                _coinResult.value = it
             }) {
                 Log.d("TAG", "getAllCoin 실패: ${it.message}")
             }.addTo(compositeDisposable)

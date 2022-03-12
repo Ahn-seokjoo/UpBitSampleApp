@@ -27,8 +27,10 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
         super.onViewCreated(view, savedInstanceState)
         _binding = DataBindingUtil.bind(view) ?: throw IllegalStateException("fail to bind")
 
-        binding.vm = exchangeViewModel
-        binding.recyclerview.adapter = exchangeRecyclerViewAdapter
+        binding.apply {
+            vm = exchangeViewModel
+            recyclerview.adapter = exchangeRecyclerViewAdapter
+        }
 
         if (savedInstanceState == null) {
             exchangeViewModel.getCoinData("KRW")
@@ -39,14 +41,16 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
     }
 
     private fun initClickListener() {
-        binding.KRW.setOnClickListener {
-            exchangeViewModel.getCoinData("KRW")
-        }
-        binding.BTC.setOnClickListener {
-            exchangeViewModel.getCoinData("BTC")
-        }
-        binding.USDT.setOnClickListener {
-            exchangeViewModel.getCoinData("USDT")
+        with(binding) {
+            KRW.setOnClickListener {
+                exchangeViewModel.getCoinData("KRW")
+            }
+            BTC.setOnClickListener {
+                exchangeViewModel.getCoinData("BTC")
+            }
+            USDT.setOnClickListener {
+                exchangeViewModel.getCoinData("USDT")
+            }
         }
     }
 
@@ -56,12 +60,12 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             .observeOn(AndroidSchedulers.mainThread())
             .map { text ->
                 if (text.isNotEmpty()) {
-                    exchangeViewModel.marketResult.value //non nullable livedata 사용해보자
+                    exchangeViewModel.coinResult.value //non nullable livedata 사용해보자
                         .filter {
                             it.korName.contains(text)
                         }
                 } else {
-                    exchangeViewModel.marketResult.value
+                    exchangeViewModel.coinResult.value
                 }
             }
             .subscribe {

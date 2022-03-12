@@ -25,8 +25,10 @@ class ExchangeViewHolder(private val parent: ViewGroup) : RecyclerView.ViewHolde
 ) {
     private val binding: RecyclerviewItemBinding = DataBindingUtil.bind(itemView) ?: throw IllegalStateException("fail to bind")
     fun bind(item: CoinData) {
-        binding.market = item
-        binding.executePendingBindings()
+        binding.apply {
+            market = item
+            executePendingBindings()
+        }
     }
 
 }
