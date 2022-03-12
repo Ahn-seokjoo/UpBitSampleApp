@@ -4,13 +4,16 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.entities.dto.Market
-import com.example.upbitsampleapp.entities.nameMapper
+import com.example.upbitsampleapp.entities.getMarketList
 import com.example.upbitsampleapp.entities.toCoinData
 import com.example.upbitsampleapp.repository.ExchangeRepository
 import com.example.upbitsampleapp.util.NonNullLiveData
 import com.example.upbitsampleapp.util.NonNullMutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -18,8 +21,7 @@ import javax.inject.Inject
 class ExchangeViewModel @Inject constructor(
     private val exchangeRepository: ExchangeRepository
 ) : ViewModel() {
-    private val allMarketTickerDataList = mutableListOf<CoinData>()
-    private val allMarketList = mutableListOf<Market.MarketItem>()
+    private val compositeDisposable = CompositeDisposable()
 
     private val _marketResult = NonNullMutableLiveData(mutableListOf<CoinData>())
     val marketResult: NonNullLiveData<MutableList<CoinData>> = _marketResult
@@ -28,39 +30,42 @@ class ExchangeViewModel @Inject constructor(
         exchangeRepository.getMarketList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map { market ->
-                market.forEach {
-                    allMarketList.add(it)
-                }
-                market.nameMapper(category)
+            .flatMap { market ->
+                Observable.fromIterable(market)
             }
-            .subscribe({
-                getTickerDataList(it)
+            .filter { marketItem ->
+                marketItem.market.startsWith(category)
+            }
+            .toList()
+            .subscribe({ list ->
+                getTickerDataList(list)
             }) {
                 Log.d("TAG", "getMarket 실패: ${it.message}")
-            }
+            }.addTo(compositeDisposable)
     }
 
-    private fun getTickerDataList(nameList: String) {
-        exchangeRepository.getTickerDataList(nameList)
+    private fun getTickerDataList(nameList: MutableList<Market.MarketItem>) {
+        exchangeRepository.getTickerDataList(nameList.getMarketList())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .flatMap {
+                Observable.fromIterable(it)
+            }
             .map {
-                val list = mutableListOf<CoinData>()
-                it.forEach {
-                    list.add(it.toCoinData(allMarketList))
-                }
-                list
+                it.toCoinData(nameList)
             }
-            .doAfterSuccess {
-                _marketResult.value = allMarketTickerDataList
-            }
+            .toList()
             .subscribe({
-                allMarketTickerDataList.clear()
-                allMarketTickerDataList.addAll(it)
+                _marketResult.value = it
             }) {
                 Log.d("TAG", "getAllCoin 실패: ${it.message}")
-            }
+            }.addTo(compositeDisposable)
+
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
     }
 
 }

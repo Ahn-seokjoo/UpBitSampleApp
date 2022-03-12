@@ -11,11 +11,14 @@ import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment_exchange) {
     private val exchangeViewModel: ExchangeViewModel by viewModels()
+    private val compositeDisposable = CompositeDisposable()
     private val exchangeRecyclerViewAdapter = ExchangeRecyclerViewAdapter()
     private lateinit var _binding: FragmentExchangeBinding
     private val binding get() = _binding
@@ -63,11 +66,12 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             }
             .subscribe {
                 exchangeRecyclerViewAdapter.submitList(it)
-            }
+            }.addTo(compositeDisposable)
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        compositeDisposable.dispose()
         binding.unbind()
+        super.onDestroyView()
     }
 }

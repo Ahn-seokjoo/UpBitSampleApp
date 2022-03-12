@@ -2,9 +2,9 @@ package com.example.upbitsampleapp.repository
 
 import com.example.upbitsampleapp.entities.dto.Market
 import com.example.upbitsampleapp.entities.dto.MarketTicker
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
 
 interface ExchangeRepository {
-    fun getMarketList(): Single<Market>
-    fun getTickerDataList(nameList: String): Single<MarketTicker>
+    fun getMarketList(): Observable<Market>
+    fun getTickerDataList(nameList: List<String>): Observable<MarketTicker>
 }
