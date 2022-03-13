@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.entities.dto.Market
-import com.example.upbitsampleapp.entities.getMarketList
+import com.example.upbitsampleapp.entities.dto.MarketTicker
 import com.example.upbitsampleapp.entities.toCoinData
 import com.example.upbitsampleapp.repository.ExchangeRepository
 import com.example.upbitsampleapp.util.NonNullLiveData
@@ -22,6 +22,8 @@ class ExchangeViewModel @Inject constructor(
     private val exchangeRepository: ExchangeRepository
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
+    private val _bitCoin = NonNullMutableLiveData<MutableList<MarketTicker.MarketTickerItem>>(mutableListOf())
+    val bitCoin: NonNullMutableLiveData<MutableList<MarketTicker.MarketTickerItem>> = _bitCoin
 
     private val _coinResult = NonNullMutableLiveData(mutableListOf<CoinData>())
     val coinResult: NonNullLiveData<MutableList<CoinData>> = _coinResult
@@ -51,6 +53,9 @@ class ExchangeViewModel @Inject constructor(
                 Observable.fromIterable(it)
             }
             .map {
+                if (it.market == "KRW-BTC") {
+                    _bitCoin.value = mutableListOf(it)
+                }
                 it.toCoinData(nameList)
             }
             .toList()
@@ -62,9 +67,16 @@ class ExchangeViewModel @Inject constructor(
 
     }
 
+    private fun MutableList<Market.MarketItem>.getMarketList(): List<String> {
+        val list = mutableListOf<String>()
+        this.forEach { marketItem ->
+            list.add(marketItem.market)
+        }
+        return list
+    }
+
     override fun onCleared() {
         compositeDisposable.dispose()
         super.onCleared()
     }
-
 }

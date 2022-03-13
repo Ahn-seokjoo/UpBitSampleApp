@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.upbitsampleapp.databinding.RecyclerviewItemBinding
 import com.example.upbitsampleapp.entities.CoinData
+import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
 
-class ExchangeRecyclerViewAdapter : ListAdapter<CoinData, ExchangeViewHolder>(ExchangeDiffUtil) {
+class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : ListAdapter<CoinData, ExchangeViewHolder>(ExchangeDiffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExchangeViewHolder {
-        return ExchangeViewHolder(parent)
+        return ExchangeViewHolder(parent, viewModel)
     }
 
     override fun onBindViewHolder(holder: ExchangeViewHolder, position: Int) {
@@ -20,13 +21,14 @@ class ExchangeRecyclerViewAdapter : ListAdapter<CoinData, ExchangeViewHolder>(Ex
 
 }
 
-class ExchangeViewHolder(private val parent: ViewGroup) : RecyclerView.ViewHolder(
+class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: ExchangeViewModel) : RecyclerView.ViewHolder(
     RecyclerviewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false).root
 ) {
     private val binding: RecyclerviewItemBinding = DataBindingUtil.bind(itemView) ?: throw IllegalStateException("fail to bind")
     fun bind(item: CoinData) {
         binding.apply {
             market = item
+            vm = viewModel
             executePendingBindings()
         }
     }

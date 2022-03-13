@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment_exchange) {
     private val exchangeViewModel: ExchangeViewModel by viewModels()
     private val compositeDisposable = CompositeDisposable()
-    private val exchangeRecyclerViewAdapter = ExchangeRecyclerViewAdapter()
+    private val exchangeRecyclerViewAdapter by lazy { ExchangeRecyclerViewAdapter(exchangeViewModel) }
     private lateinit var _binding: FragmentExchangeBinding
     private val binding get() = _binding
 
@@ -60,9 +60,9 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             .observeOn(AndroidSchedulers.mainThread())
             .map { text ->
                 if (text.isNotEmpty()) {
-                    exchangeViewModel.coinResult.value //non nullable livedata 사용해보자
+                    exchangeViewModel.coinResult.value
                         .filter {
-                            it.korName.contains(text)
+                            it.korName.contains(text.toString().replace(" ", ""))
                         }
                 } else {
                     exchangeViewModel.coinResult.value

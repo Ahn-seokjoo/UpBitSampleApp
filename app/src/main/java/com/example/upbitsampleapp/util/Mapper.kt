@@ -19,11 +19,3 @@ fun getEnglishMarket(market: String): String {
     val stringData = market.split("-")
     return "${stringData[1]}/${stringData[0]}"
 }
-
-fun MutableList<Market.MarketItem>.getMarketList(): List<String> {
-    val list = mutableListOf<String>()
-    this.forEach { marketItem ->
-        list.add(marketItem.market)
-    }
-    return list
-}

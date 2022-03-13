@@ -6,8 +6,13 @@
     <data>
 
         <variable
+            name="vm"
+            type="com.example.upbitsampleapp.viewmodel.ExchangeViewModel" />
+
+        <variable
             name="market"
             type="com.example.upbitsampleapp.entities.CoinData" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +46,7 @@
 
         <TextView
             android:id="@+id/current_price"
-            bindCurrentPrice="@{market.currentPrice}"
+            bindCurrentPrice="@{market}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -50,6 +55,21 @@
             app:layout_constraintStart_toEndOf="@id/coin_name_top"
             app:layout_constraintTop_toTopOf="@id/coin_name_top"
             tools:text="230" />
+
+        <TextView
+            android:id="@+id/perKRW"
+            bindPerKRW="@{market}"
+            bitcoin="@{vm.bitCoin}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="@color/darker_gray"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/current_price"
+            app:layout_constraintStart_toStartOf="@id/current_price"
+            app:layout_constraintTop_toBottomOf="@id/current_price"
+            tools:text="11.69KRW" />
 
         <TextView
             android:id="@+id/perYesterday"
@@ -65,7 +85,7 @@
 
         <TextView
             android:id="@+id/transaction_amount"
-            bindTradePrice="@{market.tradePrice}"
+            bindTradePrice="@{market}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="right"
