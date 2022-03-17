@@ -11,12 +11,30 @@ import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
 
 class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : ListAdapter<CoinData, ExchangeViewHolder>(ExchangeDiffUtil) {
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExchangeViewHolder {
         return ExchangeViewHolder(parent, viewModel)
     }
 
     override fun onBindViewHolder(holder: ExchangeViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).market.hashCode().toLong()
+    }
+
+    override fun onBindViewHolder(holder: ExchangeViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNullOrEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            if (payloads[0] == true) {
+                holder.bindName(getItem(position).name)
+            }
+        }
     }
 
 }
@@ -33,6 +51,10 @@ class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: E
             executePendingBindings()
         }
     }
+
+    fun bindName(item: String) {
+        binding.coinNameTop.text = item
+    }
 }
 
 object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
@@ -42,6 +64,10 @@ object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
 
     override fun areContentsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
         return oldItem == newItem
+    }
+
+    override fun getChangePayload(oldItem: CoinData, newItem: CoinData): Any? {
+        return if (oldItem.name != newItem.name) true else null
     }
 }
 
