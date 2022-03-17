@@ -2,7 +2,6 @@ package com.example.upbitsampleapp.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.example.upbitsampleapp.R
 import com.example.upbitsampleapp.base.BaseFragment
@@ -20,20 +19,22 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
     private val exchangeViewModel: ExchangeViewModel by viewModels()
     private val compositeDisposable = CompositeDisposable()
     private val exchangeRecyclerViewAdapter by lazy { ExchangeRecyclerViewAdapter(exchangeViewModel) }
-    private lateinit var _binding: FragmentExchangeBinding
-    private val binding get() = _binding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = DataBindingUtil.bind(view) ?: throw IllegalStateException("fail to bind")
 
         binding.apply {
             vm = exchangeViewModel
+            lifecycleOwner = viewLifecycleOwner
             recyclerview.adapter = exchangeRecyclerViewAdapter
         }
 
         if (savedInstanceState == null) {
             exchangeViewModel.getCoinData("KRW")
+        }
+
+        exchangeViewModel.coinNameStatus.observe(viewLifecycleOwner) {
+            exchangeRecyclerViewAdapter.submitList(exchangeViewModel.changeNameLanguage())
         }
 
         initClickListener()
@@ -61,8 +62,8 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             .map { text ->
                 if (text.isNotEmpty()) {
                     exchangeViewModel.coinResult.value
-                        .filter {
-                            it.korName.contains(text.toString().replace(" ", ""))
+                        .filter { //여기서 영어 한글 둘다 체크하는 함수를 만들기
+                            it.name.contains(text.toString().replace(" ", ""))
                         }
                 } else {
                     exchangeViewModel.coinResult.value
