@@ -7,20 +7,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-open class BaseFragment<B : ViewDataBinding>(@LayoutRes private val layoutResId: Int) : Fragment(layoutResId) {
-    private lateinit var _binding: B
-
-    private val binding: B
-        get() = _binding
+abstract class BaseFragment<B : ViewDataBinding>(@LayoutRes private val layoutResId: Int) : Fragment(layoutResId) {
+    private var _binding: B? = null
+    protected val binding: B
+        get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = DataBindingUtil.bind(view) ?: throw IllegalStateException("fail to bind")
-        binding.lifecycleOwner = viewLifecycleOwner
     }
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
-        binding.unbind()
     }
 }

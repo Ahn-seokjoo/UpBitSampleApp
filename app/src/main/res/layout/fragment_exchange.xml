@@ -138,14 +138,16 @@
 
         <TextView
             android:id="@+id/korean_sort"
+            coinNameText="@{vm.coinNameStatus}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="한글명"
+            android:onClick="@{()->vm.coinLanguageSwitch()}"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/current_price"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/KRW" />
+            app:layout_constraintTop_toBottomOf="@id/KRW"
+            tools:text="한글명" />
 
         <TextView
             android:id="@+id/current_price"

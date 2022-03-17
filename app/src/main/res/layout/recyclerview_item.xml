@@ -21,11 +21,11 @@
 
         <TextView
             android:id="@+id/coin_name_top"
+            bindName="@{market}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:text="@{market.korName}"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/coin_name_bottom"
             app:layout_constraintEnd_toStartOf="@id/current_price"
@@ -37,7 +37,7 @@
             android:id="@+id/coin_name_bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{market.engName}"
+            android:text="@{market.market}"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/coin_name_top"
             app:layout_constraintStart_toStartOf="@id/coin_name_top"

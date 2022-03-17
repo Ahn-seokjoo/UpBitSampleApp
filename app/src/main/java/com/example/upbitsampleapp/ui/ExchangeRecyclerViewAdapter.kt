@@ -25,6 +25,7 @@ class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: E
     RecyclerviewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false).root
 ) {
     private val binding: RecyclerviewItemBinding = DataBindingUtil.bind(itemView) ?: throw IllegalStateException("fail to bind")
+
     fun bind(item: CoinData) {
         binding.apply {
             market = item
@@ -32,7 +33,6 @@ class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: E
             executePendingBindings()
         }
     }
-
 }
 
 object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {

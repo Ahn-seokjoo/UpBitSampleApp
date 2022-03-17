@@ -2,11 +2,10 @@ package com.example.upbitsampleapp.util
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.upbitsampleapp.entities.CoinData
-import com.example.upbitsampleapp.entities.dto.MarketTicker
+import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import java.text.DecimalFormat
 
 object BindingAdapter {
@@ -14,10 +13,10 @@ object BindingAdapter {
     @BindingAdapter("bindCurrentPrice")
     fun TextView.bindCurrentPrice(market: CoinData) {
         this.text = when {
-            market.engName.endsWith("KRW") -> {
+            market.market.endsWith("KRW") -> {
                 DecimalFormat("#,###.####").format(market.currentPrice.toDouble())
             }
-            market.engName.endsWith("BTC") -> {
+            market.market.endsWith("BTC") -> {
                 DecimalFormat("#,##0.00000000").format(market.currentPrice.toDouble())
             }
             else -> {
@@ -36,10 +35,10 @@ object BindingAdapter {
     @BindingAdapter("bindTradePrice")
     fun TextView.bindTradePrice(market: CoinData) {
         this.text = when {
-            market.engName.endsWith("KRW") -> {
+            market.market.endsWith("KRW") -> {
                 "${DecimalFormat("###,###").format(market.tradePrice.toDouble() / 1000000)}백만"
             }
-            market.engName.endsWith("BTC") -> {
+            market.market.endsWith("BTC") -> {
                 DecimalFormat("###,##0.000").format(market.tradePrice.toDouble())
             }
             else -> {
@@ -49,13 +48,13 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter(*arrayOf("bindPerKRW", "bitcoin"), requireAll = false)
-    fun TextView.bindPerKRW(market: CoinData, bitcoin: NonNullLiveData<MutableList<MarketTicker.MarketTickerItem>>) {
+    @BindingAdapter(*arrayOf("bindPerKRW", "bitcoin"), requireAll = true)
+    fun TextView.bindPerKRW(market: CoinData, bitcoin: NonNullLiveData<MutableList<MarketTickerItem>>) {
         this.text = when {
-            market.engName.endsWith("KRW") -> {
+            market.market.endsWith("KRW") -> {
                 ""
             }
-            market.engName.endsWith("BTC") -> {
+            market.market.endsWith("BTC") -> {
                 val krwPrice = market.currentPrice.toDouble() * bitcoin.value.first().tradePrice
                 if (krwPrice.toInt() > 100) { // 비트코인 가격 x 현재가
                     "${DecimalFormat("#,###,##0").format(krwPrice)} KRW"
@@ -75,10 +74,24 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("bindData")
-    fun RecyclerView.bindData(list: LiveData<MutableList<CoinData>>?) {
-        list?.value?.toList().let {
-            (adapter as ListAdapter<Any, RecyclerView.ViewHolder>).submitList(it)
+    @BindingAdapter("coinNameText")
+    fun TextView.coinNameText(status: NonNullLiveData<Boolean>) {
+        this.text = if (status.value) {
+            "한글명"
+        } else {
+            "영문명"
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("bindName")
+    fun TextView.bindName(market: CoinData) {
+        this.text = market.name
+    }
+
+    @JvmStatic
+    @BindingAdapter("bindData")
+    fun RecyclerView.bindData(list: NonNullLiveData<List<CoinData>>) {
+        (adapter as ListAdapter<Any, RecyclerView.ViewHolder>).submitList(list.value.toList())
     }
 }
