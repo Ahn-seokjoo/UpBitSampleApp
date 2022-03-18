@@ -33,10 +33,6 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             exchangeViewModel.getCoinData("KRW")
         }
 
-        exchangeViewModel.coinNameStatus.observe(viewLifecycleOwner) {
-            exchangeRecyclerViewAdapter.submitList(exchangeViewModel.changeNameLanguage())
-        }
-
         initClickListener()
         searchCoinName()
     }
@@ -61,9 +57,11 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             .observeOn(AndroidSchedulers.mainThread())
             .map { text ->
                 if (text.isNotEmpty()) {
+                    val check = text.toString().replace(" ", "").firstCharacterToUpperCase()
                     exchangeViewModel.coinResult.value
-                        .filter { //여기서 영어 한글 둘다 체크하는 함수를 만들기
-                            it.name.contains(text.toString().replace(" ", ""))
+                        .filter {
+                            it.korName.contains(check)
+                                    || it.engName.contains(check)
                         }
                 } else {
                     exchangeViewModel.coinResult.value
@@ -74,9 +72,16 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             }.addTo(compositeDisposable)
     }
 
+    private fun String.firstCharacterToUpperCase(): String {
+        val result = StringBuilder()
+        for ((index, data) in this.withIndex()) {
+            if (index == 0) result.append(data.uppercase()) else result.append(data.lowercase())
+        }
+        return result.toString()
+    }
+
     override fun onDestroyView() {
         compositeDisposable.dispose()
-        binding.unbind()
         super.onDestroyView()
     }
 }

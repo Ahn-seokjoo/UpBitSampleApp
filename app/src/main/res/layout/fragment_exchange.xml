@@ -142,7 +142,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:onClick="@{()->vm.coinLanguageSwitch()}"
+            android:onClick="@{()->vm.changeCoinNameLanguage()}"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/current_price"
             app:layout_constraintStart_toStartOf="parent"

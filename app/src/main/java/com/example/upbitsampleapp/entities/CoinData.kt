@@ -3,7 +3,8 @@ package com.example.upbitsampleapp.entities
 import java.math.BigDecimal
 
 data class CoinData(
-    val name: String,
+    val korName: String,
+    val engName: String,
     val market: String,
     val currentPrice: BigDecimal,
     val perYesterday: Double,

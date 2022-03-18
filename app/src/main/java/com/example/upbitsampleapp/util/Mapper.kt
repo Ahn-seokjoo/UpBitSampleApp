@@ -1,10 +1,10 @@
 package com.example.upbitsampleapp.entities
 
-import android.util.Log
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 
-fun MarketTickerItem.toCoinData(status: Boolean) = CoinData(
-    name = getName(market, status),
+fun MarketTickerItem.toCoinData() = CoinData(
+    korName = getName(market, true),
+    engName = getName(market, false),
     market = getEnglishMarket(market),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
@@ -14,7 +14,6 @@ fun MarketTickerItem.toCoinData(status: Boolean) = CoinData(
 fun getName(market: String, status: Boolean) = if (status) {
     when {
         market.startsWith("KRW") -> {
-            Log.d("TAG", "getName: $market")
             KRW.getMarket(market).kor
         }
         market.startsWith("BTC") -> {
