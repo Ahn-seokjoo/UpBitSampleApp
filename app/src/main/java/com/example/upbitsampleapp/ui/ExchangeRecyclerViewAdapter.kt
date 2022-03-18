@@ -27,16 +27,6 @@ class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : Li
         return getItem(position).market.hashCode().toLong()
     }
 
-    override fun onBindViewHolder(holder: ExchangeViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isNullOrEmpty()) {
-            onBindViewHolder(holder, position)
-        } else {
-            if (payloads[0] == true) {
-                holder.bindName(getItem(position).name)
-            }
-        }
-    }
-
 }
 
 class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: ExchangeViewModel) : RecyclerView.ViewHolder(
@@ -52,9 +42,6 @@ class ExchangeViewHolder(private val parent: ViewGroup, private val viewModel: E
         }
     }
 
-    fun bindName(item: String) {
-        binding.coinNameTop.text = item
-    }
 }
 
 object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
@@ -66,9 +53,6 @@ object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
         return oldItem == newItem
     }
 
-    override fun getChangePayload(oldItem: CoinData, newItem: CoinData): Any? {
-        return if (oldItem.name != newItem.name) true else null
-    }
 }
 
 

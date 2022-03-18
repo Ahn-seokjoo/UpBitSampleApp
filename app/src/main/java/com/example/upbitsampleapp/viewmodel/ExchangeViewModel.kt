@@ -47,7 +47,7 @@ class ExchangeViewModel @Inject constructor(
                     if (it.market == "KRW-BTC") {
                         _bitCoin.value = mutableListOf(it)
                     }
-                    it.toCoinData(_coinNameStatus.value)
+                    it.toCoinData()
                 }
             }
             .subscribe({
@@ -57,44 +57,46 @@ class ExchangeViewModel @Inject constructor(
             }.addTo(compositeDisposable)
     }
 
-    fun coinLanguageSwitch() {
+    fun changeCoinNameLanguage() {
         _coinNameStatus.value = !_coinNameStatus.value
-    }
 
-    fun changeNameLanguage(): List<CoinData> {
         if (_coinNameStatus.value) {
-            return _coinResult.value.map { market ->
+            _coinResult.value = _coinResult.value.map { market ->
                 when {
                     market.market.endsWith("KRW") -> {
-                        changeNameLanguage(KRW.getMarket(market.market.undoGetEnglishMarket()).kor, market)
+                        copyKorName(KRW.getMarket(market.market.undoGetEnglishMarket()).kor, market)
                     }
                     market.market.endsWith("BTC") -> {
-                        changeNameLanguage(BTC.getMarket(market.market.undoGetEnglishMarket()).kor, market)
+                        copyKorName(BTC.getMarket(market.market.undoGetEnglishMarket()).kor, market)
                     }
                     else -> {
-                        changeNameLanguage(USDT.getMarket(market.market.undoGetEnglishMarket()).kor, market)
+                        copyKorName(USDT.getMarket(market.market.undoGetEnglishMarket()).kor, market)
                     }
                 }
             }
         } else {
-            return _coinResult.value.map { market ->
+            _coinResult.value = _coinResult.value.map { market ->
                 when {
                     market.market.endsWith("KRW") -> {
-                        changeNameLanguage(KRW.getMarket(market.market.undoGetEnglishMarket()).eng, market)
+                        copyEngName(KRW.getMarket(market.market.undoGetEnglishMarket()).eng, market)
                     }
                     market.market.endsWith("BTC") -> {
-                        changeNameLanguage(BTC.getMarket(market.market.undoGetEnglishMarket()).eng, market)
+                        copyEngName(BTC.getMarket(market.market.undoGetEnglishMarket()).eng, market)
                     }
                     else -> {
-                        changeNameLanguage(USDT.getMarket(market.market.undoGetEnglishMarket()).eng, market)
+                        copyEngName(USDT.getMarket(market.market.undoGetEnglishMarket()).eng, market)
                     }
                 }
             }
         }
     }
 
-    private fun changeNameLanguage(coinName: String, coinData: CoinData): CoinData {
-        return coinData.copy(name = coinName)
+    private fun copyKorName(coinName: String, coinData: CoinData): CoinData {
+        return coinData.copy(korName = coinName)
+    }
+
+    private fun copyEngName(coinName: String, coinData: CoinData): CoinData {
+        return coinData.copy(engName = coinName)
     }
 
     private fun List<MarketItem>.getMarketList(): List<String> {
