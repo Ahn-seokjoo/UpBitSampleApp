@@ -56,15 +56,15 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             .debounce(1000L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .map { text ->
-                if (text.isNotEmpty()) {
+                if (text.isNullOrEmpty()) {
+                    exchangeViewModel.coinResult.value
+                } else {
                     val check = text.toString().replace(" ", "").firstCharacterToUpperCase()
                     exchangeViewModel.coinResult.value
                         .filter {
                             it.korName.contains(check)
                                     || it.engName.contains(check)
                         }
-                } else {
-                    exchangeViewModel.coinResult.value
                 }
             }
             .subscribe {
