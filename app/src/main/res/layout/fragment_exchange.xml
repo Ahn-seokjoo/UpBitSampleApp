@@ -136,13 +136,13 @@
             app:layout_constraintStart_toEndOf="@id/USDT"
             app:layout_constraintTop_toBottomOf="@id/simple_line" />
 
+        <!--            android:onClick="@{()->vm.changeCoinNameLanguage()}"-->
         <TextView
             android:id="@+id/korean_sort"
             coinNameText="@{vm.coinNameStatus}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:onClick="@{()->vm.changeCoinNameLanguage()}"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/current_price"
             app:layout_constraintStart_toStartOf="parent"
@@ -183,9 +183,9 @@
             app:layout_constraintStart_toEndOf="@id/perYesterday"
             app:layout_constraintTop_toBottomOf="@id/attention" />
 
+        <!--            bindData="@{vm.coinResult}"-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
-            bindData="@{vm.coinResult}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

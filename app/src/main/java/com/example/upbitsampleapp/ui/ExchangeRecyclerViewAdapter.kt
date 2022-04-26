@@ -25,7 +25,7 @@ class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : Li
 
     object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
         override fun areItemsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
-            return oldItem === newItem
+            return oldItem.market == newItem.market
         }
 
         override fun areContentsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {

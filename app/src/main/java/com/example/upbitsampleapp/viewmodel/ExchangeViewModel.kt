@@ -2,6 +2,7 @@ package com.example.upbitsampleapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.upbitsampleapp.entities.*
 import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
@@ -13,6 +14,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,12 +28,13 @@ class ExchangeViewModel @Inject constructor(
     val coinNameStatus: NonNullLiveData<Boolean> = _coinNameStatus
 
     private val _bitCoin = NonNullMutableLiveData<MutableList<MarketTickerItem>>(mutableListOf())
-    val bitCoin: NonNullMutableLiveData<MutableList<MarketTickerItem>> = _bitCoin
+    val bitCoin: NonNullLiveData<MutableList<MarketTickerItem>> = _bitCoin
 
-    private val _coinResult = NonNullMutableLiveData(listOf<CoinData>())
-    val coinResult: NonNullLiveData<List<CoinData>> = _coinResult
+    private val _coinResult = MutableStateFlow<MutableList<CoinData>>(mutableListOf())
+    val coinResult: StateFlow<MutableList<CoinData>> = _coinResult.asStateFlow()
 
-    fun getCoinData(category: String) {
+    // 코루틴으로
+    fun firstGetCoinList(category: String) {
         exchangeRepository.getMarketList()
             .subscribeOn(Schedulers.io())
             .map { market ->
@@ -50,11 +54,35 @@ class ExchangeViewModel @Inject constructor(
                     it.toCoinData()
                 }
             }
+            .doOnSuccess {
+                startCollectingCoinList(category)
+            }
             .subscribe({
-                _coinResult.value = it
+                _coinResult.value = it.toMutableList()
             }) {
                 Log.d("TAG", "getCoinData: ${it.message}")
             }.addTo(compositeDisposable)
+    }
+
+    // 첫통신으로 데이터 채우고, 리스트에 넣은 다음
+    // 밑에걸로 distinct 걸어서 계속 업데이트 ?
+    private fun startCollectingCoinList(type: String) {
+        // 웹소켓 통신을 요구
+        viewModelScope.launch {
+            exchangeRepository.startCoinFlow(type)
+            exchangeRepository.emitChannelData().collectLatest { webSocket ->
+                _coinResult.update { list ->
+                    val toCoinData = webSocket.toCoinData()
+                    list.map { coinData ->
+                        if (coinData.market == toCoinData.market) {
+                            toCoinData
+                        } else {
+                            coinData
+                        }
+                    }.toMutableList()
+                }
+            }
+        }
     }
 
     fun changeCoinNameLanguage() {
@@ -73,7 +101,7 @@ class ExchangeViewModel @Inject constructor(
                         copyKorName(USDT.getMarket(market.market.undoGetEnglishMarket()).kor, market)
                     }
                 }
-            }
+            }.toMutableList()
         } else {
             _coinResult.value = _coinResult.value.map { market ->
                 when {
@@ -87,9 +115,10 @@ class ExchangeViewModel @Inject constructor(
                         copyEngName(USDT.getMarket(market.market.undoGetEnglishMarket()).eng, market)
                     }
                 }
-            }
+            }.toMutableList()
         }
     }
+
 
     private fun copyKorName(coinName: String, coinData: CoinData): CoinData {
         return coinData.copy(korName = coinName)
@@ -107,6 +136,7 @@ class ExchangeViewModel @Inject constructor(
 
     override fun onCleared() {
         compositeDisposable.dispose()
+        exchangeRepository.stopCoinFlow()
         super.onCleared()
     }
 

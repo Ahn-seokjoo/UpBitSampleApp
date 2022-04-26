@@ -1,6 +1,16 @@
 package com.example.upbitsampleapp.entities
 
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
+import com.example.upbitsampleapp.entities.dto.WebSocketTickerResult
+
+fun WebSocketTickerResult.WebSocketTickerResultItem.toCoinData() = CoinData(
+    korName = getName(market, true),
+    engName = getName(market, false),
+    market = getEnglishMarket(market),
+    currentPrice = tradePrice.toBigDecimal(),
+    perYesterday = (tradePrice / prevClosingPrice),
+    tradePrice = accTradePrice24h.toBigDecimal(),
+)
 
 fun MarketTickerItem.toCoinData() = CoinData(
     korName = getName(market, true),
@@ -8,7 +18,7 @@ fun MarketTickerItem.toCoinData() = CoinData(
     market = getEnglishMarket(market),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
-    tradePrice = accTradePrice24h.toBigDecimal()
+    tradePrice = accTradePrice24h.toBigDecimal(),
 )
 
 fun getName(market: String, status: Boolean) = if (status) {
