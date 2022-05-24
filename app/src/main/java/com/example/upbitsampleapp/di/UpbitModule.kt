@@ -16,6 +16,7 @@ import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -36,7 +37,7 @@ abstract class UpbitModule {
 
         @Singleton
         @Provides
-        fun providesMarketApi(retrofit: Retrofit): MarketApi = retrofit.create(MarketApi::class.java)
+        fun providesMarketApi(retrofit: Retrofit): MarketApi = retrofit.create()
 
         @Singleton
         @Provides

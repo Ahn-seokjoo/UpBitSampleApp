@@ -4,7 +4,6 @@ import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import com.example.upbitsampleapp.entities.dto.WebSocketTickerResult
 import com.example.upbitsampleapp.util.UpBitWebSocket
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -29,13 +28,11 @@ class ExchangeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getMarketList(): Single<List<MarketItem>> {
+    override suspend fun getMarketList(): List<MarketItem> {
         return marketApi.getMarket()
     }
 
-    override fun getTickerDataList(nameList: List<String>): Single<List<MarketTickerItem>> {
+    override suspend fun getTickerDataList(nameList: String): List<MarketTickerItem> {
         return marketApi.getTickerDataList(nameList)
     }
-
-
 }

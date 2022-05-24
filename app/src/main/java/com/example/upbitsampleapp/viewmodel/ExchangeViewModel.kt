@@ -1,19 +1,14 @@
 package com.example.upbitsampleapp.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.upbitsampleapp.entities.*
-import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import com.example.upbitsampleapp.repository.ExchangeRepository
 import com.example.upbitsampleapp.util.NonNullLiveData
 import com.example.upbitsampleapp.util.NonNullMutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,41 +22,26 @@ class ExchangeViewModel @Inject constructor(
     private val _coinNameStatus = NonNullMutableLiveData(KOREAN)
     val coinNameStatus: NonNullLiveData<Boolean> = _coinNameStatus
 
-    private val _bitCoin = NonNullMutableLiveData<MutableList<MarketTickerItem>>(mutableListOf())
-    val bitCoin: NonNullLiveData<MutableList<MarketTickerItem>> = _bitCoin
+    private val _bitCoin = NonNullMutableLiveData<MarketTickerItem>(MarketTickerItem())
+    val bitCoin: NonNullLiveData<MarketTickerItem> = _bitCoin
 
-    private val _coinResult = MutableStateFlow<MutableList<CoinData>>(mutableListOf())
-    val coinResult: StateFlow<MutableList<CoinData>> = _coinResult.asStateFlow()
+    private val _coinResult = MutableStateFlow<List<CoinData>>(mutableListOf())
+    val coinResult: StateFlow<List<CoinData>> = _coinResult.asStateFlow()
 
-    // 코루틴으로
     fun firstGetCoinList(category: String) {
-        exchangeRepository.getMarketList()
-            .subscribeOn(Schedulers.io())
-            .map { market ->
-                market.filter { marketItem ->
-                    marketItem.market.startsWith(category)
+        viewModelScope.launch {
+            val marketList = exchangeRepository.getMarketList().getMarketList()
+            val result = exchangeRepository.getTickerDataList(marketList).map {
+                if (it.market == "KRW-BTC") {
+                    _bitCoin.value = it
                 }
+                it.toCoinData()
             }
-            .flatMap {
-                exchangeRepository.getTickerDataList(it.getMarketList())
+            _coinResult.value = result.filter {
+                it.market.endsWith(category)
             }
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { marketTicker ->
-                marketTicker.map {
-                    if (it.market == "KRW-BTC") {
-                        _bitCoin.value = mutableListOf(it)
-                    }
-                    it.toCoinData()
-                }
-            }
-            .doOnSuccess {
-                startCollectingCoinList(category)
-            }
-            .subscribe({
-                _coinResult.value = it.toMutableList()
-            }) {
-                Log.d("TAG", "getCoinData: ${it.message}")
-            }.addTo(compositeDisposable)
+        }
+        // 보여주는 데이터 필터링좀 해야될듯듯
     }
 
     // 첫통신으로 데이터 채우고, 리스트에 넣은 다음
@@ -72,6 +52,9 @@ class ExchangeViewModel @Inject constructor(
             exchangeRepository.startCoinFlow(type)
             exchangeRepository.emitChannelData().collectLatest { webSocket ->
                 _coinResult.update { list ->
+                    // set으로 수정.
+//                    _coinResult.value.set()
+//                    _coinResult.value.replace(webSocket.toCoinData())
                     val toCoinData = webSocket.toCoinData()
                     list.map { coinData ->
                         if (coinData.market == toCoinData.market) {
@@ -126,12 +109,6 @@ class ExchangeViewModel @Inject constructor(
 
     private fun copyEngName(coinName: String, coinData: CoinData): CoinData {
         return coinData.copy(engName = coinName)
-    }
-
-    private fun List<MarketItem>.getMarketList(): List<String> {
-        return this.map {
-            it.market
-        }
     }
 
     override fun onCleared() {

@@ -2,8 +2,6 @@ package com.example.upbitsampleapp.util
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import java.text.DecimalFormat
@@ -49,13 +47,13 @@ object BindingAdapter {
 
     @JvmStatic
     @BindingAdapter(*arrayOf("bindPerKRW", "bitcoin"), requireAll = true)
-    fun TextView.bindPerKRW(market: CoinData, bitcoin: NonNullLiveData<MutableList<MarketTickerItem>>) {
+    fun TextView.bindPerKRW(market: CoinData, bitcoin: NonNullLiveData<MarketTickerItem>) {
         this.text = when {
             market.market.endsWith("KRW") -> {
                 ""
             }
             market.market.endsWith("BTC") -> {
-                val krwPrice = market.currentPrice.toDouble() * bitcoin.value.first().tradePrice
+                val krwPrice = market.currentPrice.toDouble() * bitcoin.value.tradePrice
                 if (krwPrice.toInt() > 100) { // 비트코인 가격 x 현재가
                     "${DecimalFormat("#,###,##0").format(krwPrice)} KRW"
                 } else {
@@ -93,9 +91,4 @@ object BindingAdapter {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter("bindData")
-    fun RecyclerView.bindData(list: NonNullLiveData<List<CoinData>>) {
-        (adapter as ListAdapter<Any, RecyclerView.ViewHolder>).submitList(list.value.toList())
-    }
 }

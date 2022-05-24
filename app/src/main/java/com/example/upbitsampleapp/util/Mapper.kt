@@ -1,5 +1,6 @@
 package com.example.upbitsampleapp.entities
 
+import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import com.example.upbitsampleapp.entities.dto.WebSocketTickerResult
 
@@ -56,4 +57,14 @@ fun getEnglishMarket(market: String): String {
 fun String.undoGetEnglishMarket(): String {
     val stringData = this.split("/")
     return "${stringData[1]}-${stringData[0]}"
+}
+
+fun List<MarketItem>.getMarketList(): String {
+    val marketList = this
+    val result = StringBuilder().apply {
+        marketList.map { marketItem ->
+            append("${marketItem.market},")
+        }
+    }
+    return result.removeSuffix(",").toString()
 }

@@ -11,6 +11,7 @@ import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment_exchange) {
@@ -29,11 +30,10 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
         val adapter = exchangeRecyclerViewAdapter
 
         exchangeViewModel.firstGetCoinList("KRW")
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
             exchangeViewModel.coinResult.collectLatest {
-                adapter.submitList(it.toList())
+                adapter.submitList(it)
             }
-
         }
     }
 
