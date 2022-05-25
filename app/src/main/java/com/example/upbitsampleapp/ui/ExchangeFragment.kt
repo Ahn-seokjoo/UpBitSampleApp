@@ -3,16 +3,15 @@ package com.example.upbitsampleapp.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.upbitsampleapp.R
 import com.example.upbitsampleapp.base.BaseFragment
 import com.example.upbitsampleapp.databinding.FragmentExchangeBinding
 import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
-import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment_exchange) {
@@ -28,57 +27,27 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             lifecycleOwner = viewLifecycleOwner
             recyclerview.adapter = exchangeRecyclerViewAdapter
         }
+        exchangeViewModel.firstGetCoinList("KRW")
 
-        if (savedInstanceState == null) {
-            exchangeViewModel.getCoinData("KRW")
-        }
-
-        initClickListener()
-        searchCoinName()
+        onObserve()
+        initChangeLanguage()
     }
 
-    private fun initClickListener() {
-        with(binding) {
-            KRW.setOnClickListener {
-                exchangeViewModel.getCoinData("KRW")
-            }
-            BTC.setOnClickListener {
-                exchangeViewModel.getCoinData("BTC")
-            }
-            USDT.setOnClickListener {
-                exchangeViewModel.getCoinData("USDT")
-            }
+    private fun initChangeLanguage() {
+        binding.koreanSort.setOnClickListener {
+            exchangeViewModel.changeCoinNameLanguage()
+            exchangeRecyclerViewAdapter.notifyDataSetChanged() // 추후 수정
         }
     }
 
-    private fun searchCoinName() {
-        binding.searchCoinOrSymbol.textChanges()
-            .debounce(1000L, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { text ->
-                if (text.isNullOrEmpty()) {
-                    exchangeViewModel.coinResult.value
-                } else {
-                    val check = text.toString().replace(" ", "").firstCharacterToUpperCase()
-                    exchangeViewModel.coinResult.value
-                        .filter {
-                            it.korName.contains(check)
-                                    || it.engName.contains(check)
-                        }
-                }
-            }
-            .subscribe {
+    private fun onObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            exchangeViewModel.coinResult.collectLatest {
                 exchangeRecyclerViewAdapter.submitList(it)
-            }.addTo(compositeDisposable)
+            }
+        }
     }
 
-    private fun String.firstCharacterToUpperCase(): String {
-        val result = StringBuilder()
-        for ((index, data) in this.withIndex()) {
-            if (index == 0) result.append(data.uppercase()) else result.append(data.lowercase())
-        }
-        return result.toString()
-    }
 
     override fun onDestroyView() {
         compositeDisposable.dispose()

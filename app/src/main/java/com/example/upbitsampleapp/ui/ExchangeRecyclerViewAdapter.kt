@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.viewmodel.ExchangeViewModel
 
-class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : ListAdapter<CoinData, ExchangeViewHolder>(ExchangeDiffUtil) {
+class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : ListAdapter<CoinData, ExchangeViewHolder>(exchangeDiffUtil) {
     init {
         setHasStableIds(true)
     }
@@ -23,15 +23,16 @@ class ExchangeRecyclerViewAdapter(private val viewModel: ExchangeViewModel) : Li
         return getItem(position).market.hashCode().toLong()
     }
 
-    object ExchangeDiffUtil : DiffUtil.ItemCallback<CoinData>() {
-        override fun areItemsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
-            return oldItem === newItem
-        }
+    companion object {
+        private val exchangeDiffUtil = object : DiffUtil.ItemCallback<CoinData>() {
+            override fun areItemsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
+                return oldItem.market == newItem.market
+            }
 
-        override fun areContentsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: CoinData, newItem: CoinData): Boolean {
+                return oldItem == newItem
+            }
         }
-
     }
 }
 

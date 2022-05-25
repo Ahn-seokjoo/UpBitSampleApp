@@ -3,7 +3,9 @@ package com.example.upbitsampleapp.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.example.upbitsampleapp.R
+import com.example.upbitsampleapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -16,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         onDoubleBackPressed()
     }
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             }.subscribe {
                 if (it.second - it.first < 2000L) {
                     super.onBackPressed()
+                    finish()
                 } else {
                     Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show()
                 }

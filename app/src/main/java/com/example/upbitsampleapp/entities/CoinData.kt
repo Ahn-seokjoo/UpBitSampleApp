@@ -8,5 +8,5 @@ data class CoinData(
     val market: String,
     val currentPrice: BigDecimal,
     val perYesterday: Double,
-    val tradePrice: BigDecimal
+    val tradePrice: BigDecimal,
 )
