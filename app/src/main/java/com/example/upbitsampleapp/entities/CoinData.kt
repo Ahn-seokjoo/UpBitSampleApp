@@ -9,4 +9,5 @@ data class CoinData(
     val currentPrice: BigDecimal,
     val perYesterday: Double,
     val tradePrice: BigDecimal,
+    val check: Boolean
 )

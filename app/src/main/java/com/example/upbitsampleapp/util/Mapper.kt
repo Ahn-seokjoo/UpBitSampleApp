@@ -4,22 +4,24 @@ import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import com.example.upbitsampleapp.entities.dto.WebSocketTickerResult
 
-fun WebSocketTickerResult.WebSocketTickerResultItem.toCoinData(marketList: List<MarketItem>) = CoinData(
+fun WebSocketTickerResult.WebSocketTickerResultItem.toCoinData(marketList: List<MarketItem>, check: Boolean) = CoinData(
     korName = getName(marketList, market, true) ?: "",
     engName = getName(marketList, market, false) ?: "",
     market = market.getEnglishMarket(),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
     tradePrice = accTradePrice24h.toBigDecimal(),
+    check = check
 )
 
-fun MarketTickerItem.toCoinData(marketList: List<MarketItem>) = CoinData(
+fun MarketTickerItem.toCoinData(marketList: List<MarketItem>, check: Boolean) = CoinData(
     korName = getName(marketList, market, true) ?: "",
     engName = getName(marketList, market, false) ?: "",
     market = market.getEnglishMarket(),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
     tradePrice = accTradePrice24h.toBigDecimal(),
+    check = check
 )
 
 fun getName(marketList: List<MarketItem>, market: String, status: Boolean) = if (status) {
@@ -64,11 +66,6 @@ fun getName(marketList: List<MarketItem>, market: String, status: Boolean) = if 
 fun String.getEnglishMarket(): String {
     val stringData = this.split("-")
     return "${stringData[1]}/${stringData[0]}"
-}
-
-fun String.undoGetEnglishMarket(): String {
-    val stringData = this.split("/")
-    return "${stringData[1]}-${stringData[0]}"
 }
 
 fun List<MarketItem>.getMarketList(): String {

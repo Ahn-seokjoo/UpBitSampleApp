@@ -53,7 +53,6 @@ class UpBitWebSocketListener(
     }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-//        Log.d("Socket", "Receiving bytes : $bytes")
         val result = Gson().fromJson(bytes.string(StandardCharsets.UTF_8), WebSocketTickerResult.WebSocketTickerResultItem::class.java)
         webSocketResult(result)
     }
