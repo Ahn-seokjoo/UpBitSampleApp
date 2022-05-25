@@ -27,12 +27,23 @@ class ExchangeFragment : BaseFragment<FragmentExchangeBinding>(R.layout.fragment
             lifecycleOwner = viewLifecycleOwner
             recyclerview.adapter = exchangeRecyclerViewAdapter
         }
-        val adapter = exchangeRecyclerViewAdapter
-
         exchangeViewModel.firstGetCoinList("KRW")
+
+        onObserve()
+        initChangeLanguage()
+    }
+
+    private fun initChangeLanguage() {
+        binding.koreanSort.setOnClickListener {
+            exchangeViewModel.changeCoinNameLanguage()
+            exchangeRecyclerViewAdapter.notifyDataSetChanged() // 추후 수정
+        }
+    }
+
+    private fun onObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             exchangeViewModel.coinResult.collectLatest {
-                adapter.submitList(it)
+                exchangeRecyclerViewAdapter.submitList(it)
             }
         }
     }

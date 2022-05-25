@@ -4,53 +4,65 @@ import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
 import com.example.upbitsampleapp.entities.dto.WebSocketTickerResult
 
-fun WebSocketTickerResult.WebSocketTickerResultItem.toCoinData() = CoinData(
-    korName = getName(market, true),
-    engName = getName(market, false),
-    market = getEnglishMarket(market),
+fun WebSocketTickerResult.WebSocketTickerResultItem.toCoinData(marketList: List<MarketItem>) = CoinData(
+    korName = getName(marketList, market, true) ?: "",
+    engName = getName(marketList, market, false) ?: "",
+    market = market.getEnglishMarket(),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
     tradePrice = accTradePrice24h.toBigDecimal(),
 )
 
-fun MarketTickerItem.toCoinData() = CoinData(
-    korName = getName(market, true),
-    engName = getName(market, false),
-    market = getEnglishMarket(market),
+fun MarketTickerItem.toCoinData(marketList: List<MarketItem>) = CoinData(
+    korName = getName(marketList, market, true) ?: "",
+    engName = getName(marketList, market, false) ?: "",
+    market = market.getEnglishMarket(),
     currentPrice = tradePrice.toBigDecimal(),
     perYesterday = (tradePrice / prevClosingPrice),
     tradePrice = accTradePrice24h.toBigDecimal(),
 )
 
-fun getName(market: String, status: Boolean) = if (status) {
+fun getName(marketList: List<MarketItem>, market: String, status: Boolean) = if (status) {
     when {
         market.startsWith("KRW") -> {
-            KRW.getMarket(market).kor
+            marketList.find {
+                it.market == market
+            }?.koreanName
         }
         market.startsWith("BTC") -> {
-            BTC.getMarket(market).kor
+            marketList.find {
+                it.market == market
+            }?.koreanName
         }
         else -> {
-            USDT.getMarket(market).kor
+            marketList.find {
+                it.market == market
+            }?.koreanName
         }
     }
 } else {
     when {
         market.startsWith("KRW") -> {
-            KRW.getMarket(market).eng
+            marketList.find {
+                it.market == market
+            }?.englishName
         }
         market.startsWith("BTC") -> {
-            BTC.getMarket(market).eng
+            marketList.find {
+                it.market == market
+            }?.englishName
         }
         else -> {
-            USDT.getMarket(market).eng
+            marketList.find {
+                it.market == market
+            }?.englishName
         }
     }
 }
 
 
-fun getEnglishMarket(market: String): String {
-    val stringData = market.split("-")
+fun String.getEnglishMarket(): String {
+    val stringData = this.split("-")
     return "${stringData[1]}/${stringData[0]}"
 }
 
