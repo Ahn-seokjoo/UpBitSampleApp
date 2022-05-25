@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.upbitsampleapp.entities.CoinData
 import com.example.upbitsampleapp.entities.dto.MarketItem
 import com.example.upbitsampleapp.entities.dto.MarketTickerItem
-import com.example.upbitsampleapp.entities.getEnglishMarket
 import com.example.upbitsampleapp.entities.getMarketList
 import com.example.upbitsampleapp.entities.toCoinData
 import com.example.upbitsampleapp.repository.ExchangeRepository
@@ -32,14 +31,14 @@ class ExchangeViewModel @Inject constructor(
     private val _coinResult = MutableStateFlow<List<CoinData>>(mutableListOf())
     val coinResult: StateFlow<List<CoinData>> = _coinResult.asStateFlow()
 
-    fun firstGetCoinList(category: String) {
+    fun getAllCoinList(category: String) {
         viewModelScope.launch {
             coinList.value = exchangeRepository.getMarketList()
             val result = exchangeRepository.getTickerDataList(coinList.value.getMarketList()).map {
                 if (it.market == "KRW-BTC") {
                     _bitCoin.value = it
                 }
-                it.toCoinData(coinList.value)
+                it.toCoinData(coinList.value, _coinNameStatus.value)
             }
             _coinResult.value = result.filter { it.market.endsWith(category) }
             startCollectingCoinList(category)
@@ -52,14 +51,14 @@ class ExchangeViewModel @Inject constructor(
             exchangeRepository.startCoinFlow(type)
             exchangeRepository.emitChannelData().collectLatest { webSocket ->
                 _coinResult.update { list ->
-                    val toCoinData = webSocket.toCoinData(coinList.value)
+                    val toCoinData = webSocket.toCoinData(coinList.value, _coinNameStatus.value)
                     list.map { coinData ->
                         if (coinData.market == toCoinData.market) {
                             toCoinData
                         } else {
                             coinData
                         }
-                    }.toList()
+                    }
                 }
             }
         }
@@ -71,44 +70,16 @@ class ExchangeViewModel @Inject constructor(
         if (_coinNameStatus.value) {
             _coinResult.update { coinResult ->
                 coinResult.map { market ->
-                    when {
-                        market.market.endsWith("KRW") -> {
-                            copyKorName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.koreanName ?: "", market)
-                        }
-                        market.market.endsWith("BTC") -> {
-                            copyKorName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.koreanName ?: "", market)
-                        }
-                        else -> {
-                            copyKorName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.koreanName ?: "", market)
-                        }
-                    }
-                }.toList()
+                    market.copy(check = coinNameStatus.value)
+                }
             }
         } else {
             _coinResult.update { coinResult ->
                 coinResult.map { market ->
-                    when {
-                        market.market.endsWith("KRW") -> {
-                            copyEngName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.englishName ?: "", market)
-                        }
-                        market.market.endsWith("BTC") -> {
-                            copyEngName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.englishName ?: "", market)
-                        }
-                        else -> {
-                            copyEngName(coinList.value.find { it.market.getEnglishMarket() == market.market }?.englishName ?: "", market)
-                        }
-                    }
-                }.toList()
+                    market.copy(check = coinNameStatus.value)
+                }
             }
         }
-    }
-
-    private fun copyKorName(coinName: String, coinData: CoinData): CoinData {
-        return coinData.copy(korName = coinName)
-    }
-
-    private fun copyEngName(coinName: String, coinData: CoinData): CoinData {
-        return coinData.copy(engName = coinName)
     }
 
     override fun onCleared() {

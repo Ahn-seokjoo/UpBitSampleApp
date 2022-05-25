@@ -82,9 +82,9 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter(*arrayOf("bindName", "bindStatus"), requireAll = true)
-    fun TextView.bindName(market: CoinData, status: NonNullLiveData<Boolean>) {
-        this.text = if (status.value) {
+    @BindingAdapter("bindName")
+    fun TextView.bindName(market: CoinData) {
+        this.text = if (market.check) {
             market.korName
         } else {
             market.engName

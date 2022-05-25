@@ -22,7 +22,6 @@
         <TextView
             android:id="@+id/coin_name_top"
             bindName="@{market}"
-            bindStatus="@{vm.coinNameStatus}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
